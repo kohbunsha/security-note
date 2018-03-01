@@ -1,0 +1,19 @@
+@startuml
+
+title ユーザー新規登録手順
+
+actor ユーザー as user
+participant App as app
+database サーバー as server
+
+user -> app : 新規登録ボタン
+user <-- app : 新規登録画面
+user -> app : ユーザー情報入力
+app -> server : 登録処理
+user <<-- server : 仮登録情報メール送信
+user -> app : 仮登録情報入力
+app -> server : 仮登録情報
+server -> app : 認証確認
+app -> user : ログイン状態で操作受付
+
+@enduml

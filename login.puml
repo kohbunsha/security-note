@@ -1,0 +1,36 @@
+@startuml
+
+title アプリの起動とログイン
+
+actor ユーザー as user
+
+participant Phone as phone
+
+participant アプリ as app
+
+database サーバー as server
+
+== スマートフォン ==
+
+user -> phone : ロック解除指示
+user <<-- phone : 操作可能な画面
+user -> phone : アプリ起動指示
+
+== アプリ ==
+
+create app
+phone -> app : アプリ起動
+app -> user : ログイン画面
+loop 認証成功まで
+    user -> app : ログイン操作
+    app -> server : 認証要求
+    alt 認証失敗
+        app <-- server : 認証失敗情報
+        app -> user : ログイン失敗画面
+    else
+        app <-- server : 認証成功情報
+    end
+end
+app -> user : ログイン済画面
+
+@enduml
