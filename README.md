@@ -6,13 +6,70 @@
 
 次の図は、ログインが必要なアプリを使用する手順を例示したものです。
 
-@import "login.puml"
+```puml
+@startuml
+
+title ユーザー新規登録手順
+
+actor ユーザー as user
+participant App as app
+database サーバー as server
+
+user -> app : 新規登録ボタン
+user <-- app : 新規登録画面
+user -> app : ユーザー情報入力
+app -> server : 登録処理
+user <<-- server : 仮登録情報メール送信
+user -> app : 仮登録情報入力
+app -> server : 仮登録情報
+server -> app : 認証確認
+app -> user : ログイン状態で操作受付
+
+@enduml
+```
 
 ## 新規ユーザー登録
 
 ユーザーの登録をアプリから行う場合は、一連の登録手続きを行う必要があります。
 
-@import "first.puml"
+```puml
+@startuml
+
+title アプリの起動とログイン
+
+actor ユーザー as user
+
+participant Phone as phone
+
+participant アプリ as app
+
+database サーバー as server
+
+== スマートフォン ==
+
+user -> phone : ロック解除指示
+user <<-- phone : 操作可能な画面
+user -> phone : アプリ起動指示
+
+== アプリ ==
+
+create app
+phone -> app : アプリ起動
+app -> user : ログイン画面
+loop 認証成功まで
+    user -> app : ログイン操作
+    app -> server : 認証要求
+    alt 認証失敗
+        app <-- server : 認証失敗情報
+        app -> user : ログイン失敗画面
+    else
+        app <-- server : 認証成功情報
+    end
+end
+app -> user : ログイン済画面
+
+@enduml
+```
 
 この手続きでは、メールを別途送付しています。これには、２つ理由があります。
 
